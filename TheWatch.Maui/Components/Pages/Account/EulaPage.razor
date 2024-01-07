@@ -1,0 +1,23 @@
+﻿@page "/account/EulaPage"
+
+@inject NavigationManager NavigationManager
+<!--A page to display our Eula before signup.-->
+
+<h1>End User License Agreement</h1>
+
+<p>By signing up for this service, you agree to the following terms:</p>
+
+<button @onclick="OnAccept">Accept</button>
+<button @onclick="OnCancel">Cancel</button>
+
+@code {
+
+    private void OnAccept()
+    {
+        NavigationManager.NavigateTo("tabbed/counter");
+    }
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("tabbed/counter");
+    }
+}

@@ -1,0 +1,18 @@
+﻿@using TheWatch.Maui.Services
+@inject UploadService UploadService
+
+<h3>Upload Information</h3>
+
+<input type="file" @ref="fileInput" />
+<button @onclick="UploadFile">Upload File</button>
+
+@code {
+    private ElementReference fileInput;
+
+    private async Task UploadFile()
+    {
+        var file = await fileInput.GetFileAsync();
+        using var stream = await file.OpenReadAsync();
+        await UploadService.UploadFileAsync(stream, file.Name);
+    }
+}

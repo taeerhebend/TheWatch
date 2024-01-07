@@ -1,0 +1,48 @@
+﻿@page "/account/SignUpPage"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+<!--A page to display our Eula before signup.-->
+
+<H1>The Watch</H1>
+<h3>Sign Up</h3>
+
+<EditForm Model="user" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText id="email" @bind-Value="user.Email" placeholder="Email" />
+    <InputText type="password" id="password" @bind-Value="user.Password" placeholder="Password" />
+    <InputText type="password" id="confirmPassword" @bind-Value="user.ConfirmPassword" placeholder="Confirm Password" />
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private User user = new();
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await HttpClient.PostAsJsonAsync("https://yourazurefunctionurl.com/api/FunctionName", user);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    public class User
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+}

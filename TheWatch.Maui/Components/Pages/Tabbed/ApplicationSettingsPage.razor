@@ -1,0 +1,57 @@
+﻿@page "/tabbed/ApplicationSettingsPage"
+@using Microsoft.AspNetCore.Authorization
+@using TheWatch.Maui.Services
+@inject SettingsService SettingsService
+@attribute [Authorize]
+
+<h3>Application Settings</h3>
+
+<EditForm Model="@settingsModel" OnValidSubmit="SaveSettings">
+    <div>
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="settingsModel.Email" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <InputText type="password" id="password" @bind-Value="settingsModel.Password" />
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="settingsModel.Notifications" />
+            Enable Notifications
+        </label>
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="settingsModel.LocationEnabled" />
+            Enable Location
+        </label>
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="settingsModel.LocationTracking" />
+            Enable Location Tracking
+        </label>
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="settingsModel.SMSEnabled" />
+            Enable SMS
+        </label>
+    </div>
+    <button type="submit">Save Settings</button>
+</EditForm>
+
+@code {
+    private SettingsModel settingsModel = new SettingsModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        settingsModel = await SettingsService.GetSettingsAsync();
+    }
+
+    private async Task SaveSettings()
+    {
+        await SettingsService.SaveSettingsAsync(settingsModel);
+    }
+}

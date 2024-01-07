@@ -1,0 +1,51 @@
+﻿@page "/tabbed/AssistantSettingsPage"
+@using Microsoft.AspNetCore.Authorization
+@using TheWatch.Maui.Services
+@inject SpeechRecognitionService SpeechService
+@attribute [Authorize]
+
+<h3>Set Phrases by Voice</h3>
+
+<button @onclick="SetPhraseOne">Set Phrase One</button>
+<button @onclick="SetPhraseTwo">Set Phrase Two</button>
+<button @onclick="SetPhraseThree">Set Phrase Three</button>
+
+<h3>Saved Phrases</h3>
+<p>Phrase One: @phraseOne</p>
+<p>Phrase Two: @phraseTwo</p>
+<p>Phrase Three: @phraseThree</p>
+
+@code {
+    private string phraseOne;
+    private string phraseTwo;
+    private string phraseThree;
+
+    protected override async Task OnInitializedAsync()
+    {
+        phraseOne = await SpeechService.GetPhraseAsync("PhraseOne");
+        phraseTwo = await SpeechService.GetPhraseAsync("PhraseTwo");
+        phraseThree = await SpeechService.GetPhraseAsync("PhraseThree");
+    }
+
+    private async Task SetPhraseOne()
+    {
+        phraseOne = await RecognizeAndSavePhraseAsync("PhraseOne");
+    }
+
+    private async Task SetPhraseTwo()
+    {
+        phraseTwo = await RecognizeAndSavePhraseAsync("PhraseTwo");
+    }
+
+    private async Task SetPhraseThree()
+    {
+        phraseThree = await RecognizeAndSavePhraseAsync("PhraseThree");
+    }
+
+    private async Task<string> RecognizeAndSavePhraseAsync(string key)
+    {
+        var phrase = await SpeechService.RecognizePhraseAsync();
+        await SpeechService.SavePhraseAsync(key, phrase);
+        return phrase;
+    }
+}

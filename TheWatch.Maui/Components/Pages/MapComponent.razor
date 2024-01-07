@@ -1,0 +1,15 @@
+﻿@inject IJSRuntime JSRuntime
+
+<button @onclick="ShowMap">Show Map</button>
+
+<div id="map"></div>
+<div id="directions"></div>
+
+@code
+{
+    private async Task ShowMap()
+    {
+        //This method will initialize the map using JavaScript Interop.
+        await JSRuntime.InvokeVoidAsync("initMap", "Your_Azure_Maps_Subscription_Key");
+    }
+}

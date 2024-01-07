@@ -1,0 +1,48 @@
+﻿@page "/account/LoginPage"
+@using TheWatch.Maui.Services
+@using TheWatch.Maui.Data
+@inject LoginService LoginService
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+<h3>LoginPage</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="Login">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="loginModel.Email" />
+        <ValidationMessage For="@(() => loginModel.Email)" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <InputText type="password" id="password" @bind-Value="loginModel.Password" />
+        <ValidationMessage For="@(() => loginModel.Password)" />
+    </div>
+    <button type="submit">Login</button>
+</EditForm>
+
+<p>Don't have an account? <a href="#" @onclick="NavigateToSignup">Sign up</a></p>
+<p>Forgot password? <a href="#" @onclick="NavigateToForgotPassword">Click here</a></p>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    private async Task Login()
+    {
+        // Pass loginModel to the LoginService
+        await LoginService.Login(loginModel.Email, loginModel.Password);
+    }
+
+    void NavigateToSignup()
+    {
+        NavigationManager.NavigateTo("/account/EulaPage");
+    }
+
+    void NavigateToForgotPassword()
+    {
+        NavigationManager.NavigateTo("/account/forgotpassword");
+    }
+}
